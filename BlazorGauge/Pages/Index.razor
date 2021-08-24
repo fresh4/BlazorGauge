@@ -1,0 +1,81 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<div class="row">
+    <div class="col-md-12 col-lg-6">
+        <ApexChart TItem="PercentValue" Title="Risk Percentage" ChartType="@ChartType.RadialBar" Options="options">
+            <ApexSeries TItem="PercentValue"
+                        Items="values"
+                        XValue="@(e => e.Label)"
+                        YAggregate="@(e => e.Sum(e => e.Value))"
+                        ShowDataLabels="true" />
+        </ApexChart>
+    </div>
+</div>
+
+@code
+{
+    private ApexChartOptions<PercentValue> options = new ApexCharts.ApexChartOptions<PercentValue>();
+    private List<PercentValue> values = new List<PercentValue>();
+
+    private decimal percentage = 25, percentage2 = 75;
+    protected override void OnInitialized(){
+        options.Colors = new List<string> { "#32F16C", "#F13232" };
+        options.Stroke = new Stroke { LineCap = LineCap.Round};
+
+        options.Chart = new Chart {
+            Sparkline = new ChartSparkline(),
+            Animations = new Animations {
+                Speed = 1850,
+                Easing = Easing.Easein,
+                AnimateGradually = new AnimateGradually {
+                    Enabled = true
+                }
+            }
+        };
+
+        options.PlotOptions = new PlotOptions {
+            RadialBar = new PlotOptionsRadialBar {
+                Hollow = new Hollow {
+                    Size = "55%"
+                },
+                DataLabels = new RadialBarDataLabels {
+                    Show = true,
+                    Name = new RadialBarDataLabelsName {
+                        FontSize = "20px",
+                        Color = "#888"
+                        //OffsetY = -100
+                    },
+                    Value = new RadialBarDataLabelsValue {
+                        FontSize = "72px",
+                        Color = "#111",
+                        OffsetY = -50
+                    },
+                    Total = new RadialBarDataLabelsTotal {
+                        Show = true, 
+                        Label = "vs Current Risk %"
+                    }
+                },
+                StartAngle = -90, EndAngle = 90
+            }
+        };
+
+        values.Add(new PercentValue { Label = "Current Risk", Value = percentage });
+        values.Add(new PercentValue { Label = "Max Risk", Value = percentage2 });
+    }
+
+    private void IncrementCount(){
+        percentage = new Random().Next(0,100);
+        percentage2 = new Random().Next(0, 100);
+        values[0].Value = percentage;
+        values[1].Value = percentage2;
+    }
+
+    public class PercentValue
+    {
+        public string Label { get; set; }
+        public decimal Value { get; set; }
+    }
+}
