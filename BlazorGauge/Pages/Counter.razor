@@ -1,22 +1,22 @@
 ﻿@page "/"
 
 @inject IJSRuntime jsRuntime
-<button onclick="@(formInput())" id="testButton" style="display:none;"></button>
+<!--<button onclick="@(formInput())" id="testButton" style="display:none;"></button> -->
 <p>Click here for random results: </p>
-<button class="btn btn-primary" @onclick="randNum">Button</button>
+<button class="btn btn-primary" @onclick="randNum">Random</button>
 
 <div class="row">
     <div class="col-sm-12 col-md-8 col-lg-4">
         <div class="form-group">
             <label for="percentage">Or enter a value for the stage and grade of periodontitis</label>
-            <input class="form-control" type="number" min="0" max="100" @bind="stage" @bind:event="oninput"/>
-            <input class="form-control" type="number" min="0" max="100" @bind="grade" @bind:event="oninput"/>
-            <small class="form-text text-muted">Enter a value between 0 and 100 to update the gauge.</small>
+            <input class="form-control" type="number" min="0" max="100" @bind="stage" @bind:event="oninput" />
+            <input class="form-control" type="number" min="0" max="100" @bind="grade" @bind:event="oninput" />
+            <small class="form-text text-muted">Enter a value between 0 and 100 and click submit to update the gauge.</small>
+            <button class="btn btn-primary" @onclick="formInput">Submit</button>
         </div>
     </div>
 </div>
-<p>@stage</p>
-<p>@grade</p>
+
 <div id="chart"></div>
 
 
@@ -42,7 +42,7 @@
     {
         stage = new Random().Next(0, 100);
         grade = new Random().Next(0, 100);
-        await jsRuntime.InvokeVoidAsync("updateGauge", stage, grade);
+        await formInput();
     }
 
 }
