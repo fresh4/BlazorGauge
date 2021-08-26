@@ -1,26 +1,48 @@
-﻿@page "/counter"
+﻿@page "/"
 
 @inject IJSRuntime jsRuntime
-<button class="btn btn-primary" @onclick="randNum">Click me</button>
+<button onclick="@(formInput())" id="testButton" style="display:none;"></button>
+<p>Click here for random results: </p>
+<button class="btn btn-primary" @onclick="randNum">Button</button>
 
+<div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-4">
+        <div class="form-group">
+            <label for="percentage">Or enter a value for the stage and grade of periodontitis</label>
+            <input class="form-control" type="number" min="0" max="100" @bind="stage" @bind:event="oninput"/>
+            <input class="form-control" type="number" min="0" max="100" @bind="grade" @bind:event="oninput"/>
+            <small class="form-text text-muted">Enter a value between 0 and 100 to update the gauge.</small>
+        </div>
+    </div>
+</div>
+<p>@stage</p>
+<p>@grade</p>
 <div id="chart"></div>
 
 
 @code {
-    //protected override async Task OnInitializedAsync() {}
+    int stage = 25, grade = 50;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
         if (firstRender)
         {
-            await jsRuntime.InvokeVoidAsync("generateGauge", 25, 50);
+            await jsRuntime.InvokeVoidAsync("generateGauge", stage, grade);
             this.StateHasChanged();
         }
     }
+    public void test() {
+        
+    }
+    public async Task formInput(){
+        await jsRuntime.InvokeVoidAsync("updateGauge", stage, grade);
+    }
 
-    public async Task randNum() {
-        int num1 = new Random().Next(0, 100),
-            num2 = new Random().Next(0, 100);
-        await jsRuntime.InvokeVoidAsync("updateGauge", num1, num2);
+    public async Task randNum()
+    {
+        stage = new Random().Next(0, 100);
+        grade = new Random().Next(0, 100);
+        await jsRuntime.InvokeVoidAsync("updateGauge", stage, grade);
     }
 
 }
