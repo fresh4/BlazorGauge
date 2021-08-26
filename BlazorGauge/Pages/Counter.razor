@@ -1,7 +1,6 @@
 ﻿@page "/"
 
 @inject IJSRuntime jsRuntime
-<!--<button onclick="@(formInput())" id="testButton" style="display:none;"></button> -->
 <p>Click here for random results: </p>
 <button class="btn btn-primary" @onclick="randNum">Random</button>
 
@@ -12,7 +11,7 @@
             <input class="form-control" type="number" min="0" max="100" @bind="stage" @bind:event="oninput" />
             <input class="form-control" type="number" min="0" max="100" @bind="grade" @bind:event="oninput" />
             <small class="form-text text-muted">Enter a value between 0 and 100 and click submit to update the gauge.</small>
-            <button class="btn btn-primary" @onclick="formInput">Submit</button>
+            <button class="btn btn-primary" @onclick="updateGauge">Submit</button>
         </div>
     </div>
 </div>
@@ -31,10 +30,8 @@
             this.StateHasChanged();
         }
     }
-    public void test() {
-        
-    }
-    public async Task formInput(){
+
+    public async Task updateGauge(){
         await jsRuntime.InvokeVoidAsync("updateGauge", stage, grade);
     }
 
@@ -42,7 +39,7 @@
     {
         stage = new Random().Next(0, 100);
         grade = new Random().Next(0, 100);
-        await formInput();
+        await updateGauge();
     }
 
 }
