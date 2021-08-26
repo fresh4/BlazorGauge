@@ -2,7 +2,7 @@ var chart;
 function setColor(num) {
     if (num <= 25) {
         return '#35db4e'
-    } else if (num > 25 && num < 75) {
+    } else if (num > 25 && num <= 75) {
         return '#f2f22e'
     } else {
         return '#db3535'
@@ -14,7 +14,6 @@ function generateGauge(num1, num2) {
             show: true,
             position: "bottom",
             fontSize: "15px",
-            //offsetY: -175,
             markers: {
                 fillColors: [setColor(num1), setColor(num2)]
             }
@@ -28,7 +27,7 @@ function generateGauge(num1, num2) {
                 speed: 1500,
                 animateGradually: {
                     enabled: true,
-                    delay: 0
+                    delay: 200
                 },
                 dynamicAnimations: {
                     enabled: true,
@@ -37,16 +36,10 @@ function generateGauge(num1, num2) {
             }
         },
         series: [num1, num2],
-        labels: ["grade periodontitis%", "stage periodontitis%"],
+        labels: ["stage periodontitis%", "grade periodontitis%"],
         fill: {
             colors: [function ({ value }) {
-                if (value <= 25) {
-                    return '#35db4e'
-                } else if (value > 25 && value <= 75) {
-                    return '#f2f238'
-                } else {
-                    return '#db3535'
-                }
+                return setColor(value);
             }]
         },
         plotOptions: {
@@ -74,18 +67,18 @@ function generateGauge(num1, num2) {
                         show: true,
                         label: "stage/grade periodontitis",
                         formatter: function (w) {
-                            var a = w.globals.seriesTotals.reduce((a, b) => {
+                            var stage = w.globals.seriesTotals.reduce((a, b) => {
                                     if (a <= 25) return "I"
                                     else if (a <= 50) return "II"
                                     else if (a <= 75) return "III"
                                     else return "IV"
                                 }),
-                                b = w.globals.seriesTotals.reduce((a, b) => {
+                                grade = w.globals.seriesTotals.reduce((a, b) => {
                                     if (b <= 25) return "A"
                                     else if (b <= 75) return "B"
                                     else return "C"
                                 });
-                            return a + "/" + b;
+                            return stage + "/" + grade;
                         }
                     }
                 }
